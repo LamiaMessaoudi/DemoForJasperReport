@@ -5,6 +5,7 @@ import net.sf.jasperreports.engine.design.*;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.engine.xml.JRXmlWriter;
+import net.sf.jasperreports.view.JasperViewer;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
@@ -13,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,8 +75,6 @@ public class SubReportService {
             staticText.setY(20);
             staticText.setWidth(100);
             staticText.setHeight(30);
-            staticText.setForecolor(Color.white);
-            staticText.setBackcolor(new Color(0x33, 0x33, 0x33));
             staticText.setText(fieldsList.get(i));
             bndt= (JRDesignBand) jp.getTitle();
             bndt.addElement(staticText);
@@ -109,13 +109,16 @@ public class SubReportService {
     }
 
 
-    public void exportReport(String reportFormat) throws FileNotFoundException, JRException
-    {
+    public void exportReport(String reportFormat) throws FileNotFoundException, JRException, SQLException {
         String path="D:";
+        Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/reis_db", "postgres", "postgresql");
+
         File file = ResourceUtils.getFile("SUBREP_Lamia.jrxml");
         JasperReport jasperReport=JasperCompileManager.compileReport(file.getAbsolutePath());
-
-        JasperPrint jasperPrint=JasperFillManager.fillReport(jasperReport,null);
+        Map<String, Object> parameters=new HashMap<String, Object>();
+        parameters.put("LastName", "TRABELSI");
+        parameters.put("FirstName", "MOURAD");
+        JasperPrint jasperPrint=JasperFillManager.fillReport(jasperReport,parameters,conn);
 
 
         if(reportFormat.equalsIgnoreCase("html"))
@@ -126,6 +129,10 @@ public class SubReportService {
         if(reportFormat.equalsIgnoreCase("pdf"))
         {
             JasperExportManager.exportReportToPdfFile(jasperPrint,path+"\\employee.pdf");
+        }
+        if(reportFormat.equalsIgnoreCase("xls"))
+        {
+            JasperExportManager.exportReportToXmlFile(jasperPrint,path+"\\employee.xls",false);
         }
     }
 
@@ -144,7 +151,10 @@ public class SubReportService {
                 try {
                     Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/reis_db", "postgres", "postgresql");
                     JasperReport jreport = JasperCompileManager.compileReport("SUBREP_Lamia.jrxml");
-                    JasperPrint jprint = JasperFillManager.fillReport(jreport, new HashMap(), conn);
+                    Map<String, Object> parameters=new HashMap<String, Object>();
+                    parameters.put("LastName", "MESSAOUDI");
+                    parameters.put("FirstName", "LAMIA");
+                    JasperPrint jprint = JasperFillManager.fillReport(jreport, parameters, conn);
                     JRExporter  exporter= new JRPdfExporter();
                     exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME,"report.pdf");
                     exporter.setParameter(JRExporterParameter.JASPER_PRINT,jprint);

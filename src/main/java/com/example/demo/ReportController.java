@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("/report")
@@ -12,6 +13,17 @@ public class ReportController {
 
     @Autowired
     private SubReportService subReportService;
+    @Autowired
+    private ReportService reportService;
+
+
+    @GetMapping("/getTables")
+    public List<String> getTables()
+    {
+        return reportService.gettAllTables();
+    }
+
+
 
     @PostMapping("/generate")
     public void generate(@RequestBody Report report)
@@ -25,9 +37,9 @@ public class ReportController {
             subReportService.generateDetails(report.getFields());
 
             subReportService.createSubReport();
-            subReportService.exportReport("html");
+            subReportService.exportReport("pdf");
 
-           // subReportService.raporti();
+           subReportService.raporti();
         }catch (Exception e){
 
         }

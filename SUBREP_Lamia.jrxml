@@ -3,7 +3,7 @@
 	<parameter name="FirstName" class="java.lang.String"/>
 	<parameter name="LastName" class="java.lang.String"/>
 	<queryString language="SQL">
-		<![CDATA[select citizenship ,first_name,last_name from getCustomers()]]>
+		<![CDATA[select citizenship ,first_name,last_name from getCustomers($P{FirstName},$P{LastName})]]>
 	</queryString>
 	<field name="citizenship" class="java.lang.String"/>
 	<field name="first_name" class="java.lang.String"/>
@@ -14,17 +14,17 @@
 	<title>
 		<band height="55" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="20" width="100" height="30" forecolor="#FFFFFF" backcolor="#333333"/>
+				<reportElement x="0" y="20" width="100" height="30"/>
 				<textElement/>
 				<text><![CDATA[citizenship]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="100" y="20" width="100" height="30" forecolor="#FFFFFF" backcolor="#333333"/>
+				<reportElement x="100" y="20" width="100" height="30"/>
 				<textElement/>
 				<text><![CDATA[first_name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="200" y="20" width="100" height="30" forecolor="#FFFFFF" backcolor="#333333"/>
+				<reportElement x="200" y="20" width="100" height="30"/>
 				<textElement/>
 				<text><![CDATA[last_name]]></text>
 			</staticText>
